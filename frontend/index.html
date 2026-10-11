@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Cubely — Rubik's Cube Solver</title>
+
+    <link rel="stylesheet" href="/src/style.css" />
+</head>
+
+<body>
+
+    <!-- ==================================================
+         CUBELY INTRO
+         ================================================== -->
+
+    <div class="cubely-intro" id="cubelyIntro">
+
+        <div class="cubely-intro-grid"></div>
+
+        <div class="cubely-loader">
+
+            <!-- 3D RUBIK'S CUBE -->
+
+            <div class="cube-wrapper">
+
+                <div class="cube">
+
+                    <!-- FRONT -->
+                    <div class="cube-face front">
+
+                        <span></span>
+                        <span></span>
+                        <span></span>
+
+                        <span></span>
+                        <span></span>
+                        <span></span>
+
+                        <span></span>
+                        <span></span>
+                        <span></span>
+
+                    </div>
+
+
+                    <!-- BACK -->
+                    <div class="cube-face back">
+
+                        <span></span>
+                        <span></span>
+                        <span></span>
+
+                        <span></span>
+                        <span></span>
+                        <span></span>
+
+                        <span></span>
+                        <span></span>
+                        <span></span>
+
+                    </div>
+
+
+                    <!-- RIGHT -->
+                    <div class="cube-face right">
+
+                        <span></span>
+                        <span></span>
+                        <span></span>
+
+                        <span></span>
+                        <span></span>
+                        <span></span>
+
+                        <span></span>
+                        <span></span>
+                        <span></span>
+
+                    </div>
+
+
+                    <!-- LEFT -->
+                    <div class="cube-face left">
+
+                        <span></span>
+                        <span></span>
+                        <span></span>
+
+                        <span></span>
+                        <span></span>
+                        <span></span>
+
+                        <span></span>
+                        <span></span>
+                        <span></span>
+
+                    </div>
+
+
+                    <!-- TOP -->
+                    <div class="cube-face top">
+
+                        <span></span>
+                        <span></span>
+                        <span></span>
+
+                        <span></span>
+                        <span></span>
+                        <span></span>
+
+                        <span></span>
+                        <span></span>
+                        <span></span>
+
+                    </div>
+
+
+                    <!-- BOTTOM -->
+                    <div class="cube-face bottom">
+
+                        <span></span>
+                        <span></span>
+                        <span></span>
+
+                        <span></span>
+                        <span></span>
+                        <span></span>
+
+                        <span></span>
+                        <span></span>
+                        <span></span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- CUBELY BRAND -->
+
+            <div class="cubely-brand">
+
+                <h1>
+                    CUBELY<span>.</span>
+                </h1>
+
+                <p>
+                    SCAN · SOLVE · LEARN · PLAY
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==================================================
+         MAIN WEBSITE
+         ================================================== -->
+
+    <div class="page" id="page">
+
+        <div class="cursor" id="cursor">
+        </div>
+
+        <div class="cursor-ring" id="cursorRing">
+        </div>
+
+
+        <!-- HEADER -->
+
+        <header class="header">
+            
+            <div class="cubely-brand">
+
+                <h1>
+                    CUBELY<span>.</span>
+                </h1>
+
+                <p>
+                    Scan all six faces of the cube and get a solution
+                </p>
+
+            </div>
+        
+
+        </header>
+
+
+        <main class="container">
+
+
+            <!-- ==================================================
+                 CAMERA
+                 ================================================== -->
+
+            <section class="camera-section">
+
+                <div class="camera-container">
+
+                    <video id="camera" autoplay playsinline muted>
+                    </video>
+
+                    <canvas id="overlay"></canvas>
+
+
+                    <div class="cube-grid">
+
+                        <div class="grid-cell cell-1"></div>
+                        <div class="grid-cell cell-2"></div>
+                        <div class="grid-cell cell-3"></div>
+
+                        <div class="grid-cell cell-4"></div>
+                        <div class="grid-cell cell-5"></div>
+                        <div class="grid-cell cell-6"></div>
+
+                        <div class="grid-cell cell-7"></div>
+                        <div class="grid-cell cell-8"></div>
+                        <div class="grid-cell cell-9"></div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CURRENT FACE -->
+
+                <div class="scan-info">
+
+                    <div>
+
+                        <span>
+                            Scanning:
+                        </span>
+
+                        <strong id="current-face">
+                            F
+                        </strong>
+
+                    </div>
+
+
+                    <p id="instruction">
+                        Hold the FRONT face inside the square.
+                    </p>
+
+                </div>
+
+
+                <!-- CONTROLS -->
+
+                <div class="controls">
+
+                    <button id="start-camera" class="primary-button">
+
+                        Start Camera
+
+                    </button>
+
+
+                    <button id="scan-face" class="primary-button" disabled>
+
+                        Scan Face
+
+                    </button>
+
+
+                    <button id="reset" class="secondary-button">
+
+                        Reset
+
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- ==================================================
+                 SCANNED FACES
+                 ================================================== -->
+
+            <section class="faces-section">
+
+                <h2>
+                    Scanned Faces
+                </h2>
+
+
+                <div class="faces-grid">
+
+
+                    <div class="face-card" data-face="U">
+
+                        <span>U</span>
+
+                        <div id="face-U" class="mini-face">
+                        </div>
+
+                    </div>
+
+
+                    <div class="face-card" data-face="R">
+
+                        <span>R</span>
+
+                        <div id="face-R" class="mini-face">
+                        </div>
+
+                    </div>
+
+
+                    <div class="face-card" data-face="F">
+
+                        <span>F</span>
+
+                        <div id="face-F" class="mini-face">
+                        </div>
+
+                    </div>
+
+
+                    <div class="face-card" data-face="D">
+
+                        <span>D</span>
+
+                        <div id="face-D" class="mini-face">
+                        </div>
+
+                    </div>
+
+
+                    <div class="face-card" data-face="L">
+
+                        <span>L</span>
+
+                        <div id="face-L" class="mini-face">
+                        </div>
+
+                    </div>
+
+
+                    <div class="face-card" data-face="B">
+
+                        <span>B</span>
+
+                        <div id="face-B" class="mini-face">
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ==================================================
+                 SOLVE
+                 ================================================== -->
+
+            <section class="solve-section">
+
+                <button id="solve-button" class="solve-button" disabled>
+
+                    Solve Cube
+
+                </button>
+
+
+                <div id="status" class="status">
+
+                    Start the camera to begin.
+
+                </div>
+
+            </section>
+
+
+            <!-- ==================================================
+                 SOLUTION
+                 ================================================== -->
+
+            <section id="solution-section" class="solution-section hidden">
+
+                <h2>
+                    Solution
+                </h2>
+
+
+                <div id="solution" class="solution">
+                </div>
+
+
+                <div id="move-count" class="move-count">
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <script type="module" src="/src/main.ts">
+    </script>
+
+</body>
+
+</html>

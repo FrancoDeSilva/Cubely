@@ -1,0 +1,886 @@
+* {
+  box-sizing: border-box;
+}
+
+
+body {
+  margin: 0;
+
+  min-height: 100vh;
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  background:
+    #101218;
+
+  color: white;
+}
+
+
+.header {
+  padding: 30px 20px;
+
+  text-align: center;
+
+  background:
+    #171a22;
+
+  border-bottom:
+    1px solid #292d38;
+}
+
+
+.header h1 {
+  margin: 0 0 8px;
+
+  font-size: 32px;
+}
+
+
+.header p {
+  margin: 0;
+
+  color: #a7adba;
+}
+
+
+.container {
+  width: min(1100px, 94%);
+
+  margin:
+    30px auto;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 25px;
+}
+
+
+.camera-section,
+.faces-section,
+.solve-section,
+.solution-section {
+  background:
+    #171a22;
+
+  border:
+    1px solid #292d38;
+
+  border-radius:
+    18px;
+
+  padding:
+    22px;
+}
+
+
+.camera-container {
+  position: relative;
+
+  width: min(700px, 100%);
+
+  aspect-ratio: 16 / 9;
+
+  margin: 0 auto;
+
+  overflow: hidden;
+
+  background: black;
+
+  border-radius: 14px;
+}
+
+
+#camera {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  display: block;
+}
+
+
+#overlay {
+  position: absolute;
+
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  pointer-events: none;
+}
+
+
+.cube-grid {
+  position: absolute;
+
+  width: 48%;
+  aspect-ratio: 1;
+
+  left: 50%;
+  top: 50%;
+
+  transform:
+    translate(-50%, -50%);
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  grid-template-rows:
+    repeat(3, 1fr);
+
+  pointer-events: none;
+}
+
+
+.grid-cell {
+  border:
+    2px solid rgba(255, 255, 255, 0.85);
+
+  background:
+    rgba(255, 255, 255, 0.04);
+}
+
+
+.grid-cell:nth-child(5) {
+  border:
+    3px solid white;
+}
+
+
+.scan-info {
+  text-align: center;
+
+  margin-top: 20px;
+}
+
+
+.scan-info span {
+  color: #9da3b0;
+}
+
+
+.scan-info strong {
+  font-size: 30px;
+
+  margin-left: 8px;
+}
+
+
+.scan-info p {
+  color: #b7bdc9;
+
+  margin:
+    8px 0 0;
+}
+
+
+.controls {
+  display: flex;
+
+  justify-content: center;
+
+  gap: 12px;
+
+  margin-top: 20px;
+
+  flex-wrap: wrap;
+}
+
+
+button {
+  border: none;
+
+  cursor: pointer;
+
+  border-radius: 10px;
+
+  padding:
+    13px 22px;
+
+  font-size: 15px;
+
+  font-weight: 600;
+}
+
+
+button:disabled {
+  opacity: 0.4;
+
+  cursor: not-allowed;
+}
+
+
+.primary-button {
+  background: #ffffff;
+
+  color: #111318;
+}
+
+
+.secondary-button {
+  background: #292e39;
+
+  color: white;
+}
+
+
+.solve-button {
+  width: 100%;
+
+  background:
+    #ffffff;
+
+  color:
+    #111318;
+
+  font-size:
+    18px;
+
+  padding:
+    16px;
+}
+
+
+.faces-section h2,
+.solution-section h2 {
+  margin-top: 0;
+}
+
+
+.faces-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(6, 1fr);
+
+  gap: 12px;
+}
+
+
+.face-card {
+  text-align: center;
+
+  background:
+    #20242d;
+
+  padding:
+    10px;
+
+  border-radius:
+    10px;
+}
+
+
+.face-card > span {
+  display: block;
+
+  margin-bottom: 8px;
+
+  font-weight: bold;
+}
+
+
+.mini-face {
+  width: 100%;
+
+  aspect-ratio: 1;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 2px;
+}
+
+
+.mini-sticker {
+  border-radius: 2px;
+
+  border:
+    1px solid rgba(0, 0, 0, 0.4);
+}
+
+
+.status {
+  margin-top: 15px;
+
+  text-align: center;
+
+  color: #aeb5c1;
+}
+
+
+.solution {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 8px;
+}
+
+
+.move {
+  padding:
+    10px 14px;
+
+  background:
+    #252a34;
+
+  border-radius:
+    8px;
+
+  font-weight:
+    bold;
+
+  font-size:
+    18px;
+}
+
+
+.move-count {
+  margin-top:
+    18px;
+
+  color:
+    #aeb5c1;
+}
+
+
+.hidden {
+  display: none;
+}
+
+
+@media (max-width: 700px) {
+
+  .faces-grid {
+    grid-template-columns:
+      repeat(3, 1fr);
+  }
+
+  .camera-container {
+    aspect-ratio: 4 / 3;
+  }
+
+  .cube-grid {
+    width: 65%;
+  }
+}
+
+/* =========================================================
+   CUBELY INTRO
+   ========================================================= */
+
+.cubely-intro {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 1000;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  overflow: hidden;
+
+  background:
+    radial-gradient(circle at center,
+      #242832 0%,
+      #151820 32%,
+      #0d0f14 65%,
+      #07080b 100%);
+
+  color: white;
+
+  opacity: 1;
+
+  visibility: visible;
+
+  transition:
+    opacity 1s cubic-bezier(.77, 0, .18, 1),
+    visibility 1s;
+}
+
+
+.cubely-intro.hide {
+  opacity: 0;
+
+  visibility: hidden;
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   BACKGROUND GRID
+   ========================================================= */
+
+.cubely-intro-grid {
+  position: absolute;
+
+  inset: 0;
+
+  background-image:
+    linear-gradient(rgba(255, 255, 255, .025) 1px,
+      transparent 1px),
+    linear-gradient(90deg,
+      rgba(255, 255, 255, .025) 1px,
+      transparent 1px);
+
+  background-size: 70px 70px;
+
+  mask-image:
+    radial-gradient(circle,
+      black 0%,
+      transparent 70%);
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   INTRO CONTENT
+   ========================================================= */
+
+.cubely-loader {
+  position: relative;
+
+  z-index: 2;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+}
+
+
+/* =========================================================
+   3D CUBE
+   ========================================================= */
+
+.cube-wrapper {
+  width: 170px;
+
+  height: 170px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  perspective: 800px;
+
+  animation:
+    cubeIntro 1.2s cubic-bezier(.16, 1, .3, 1) forwards;
+}
+
+
+.cube {
+  position: relative;
+
+  width: 110px;
+
+  height: 110px;
+
+  transform-style: preserve-3d;
+
+  animation:
+    cubeRotate 5s linear infinite;
+}
+
+
+/* =========================================================
+   CUBE FACES
+   ========================================================= */
+
+.cube-face {
+  position: absolute;
+
+  width: 110px;
+
+  height: 110px;
+
+  padding: 5px;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  grid-template-rows:
+    repeat(3, 1fr);
+
+  gap: 4px;
+
+  background: #111318;
+
+  border:
+    2px solid #050609;
+
+  border-radius: 10px;
+
+  backface-visibility: hidden;
+}
+
+
+.cube-face span {
+  display: block;
+
+  border-radius: 5px;
+
+  border:
+    1px solid rgba(0, 0, 0, .45);
+
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, .25),
+    0 1px 2px rgba(0, 0, 0, .35);
+}
+
+
+/* =========================================================
+   FRONT
+   ========================================================= */
+
+.front {
+  transform:
+    rotateY(0deg) translateZ(55px);
+}
+
+.front span:nth-child(-n+3) {
+  background: #ffffff;
+}
+
+.front span:nth-child(n+4):nth-child(-n+6) {
+  background: #ff3b30;
+}
+
+.front span:nth-child(n+7) {
+  background: #ff9500;
+}
+
+
+/* =========================================================
+   BACK
+   ========================================================= */
+
+.back {
+  transform:
+    rotateY(180deg) translateZ(55px);
+}
+
+.back span {
+  background: #ffd60a;
+}
+
+
+/* =========================================================
+   RIGHT
+   ========================================================= */
+
+.right {
+  transform:
+    rotateY(90deg) translateZ(55px);
+}
+
+.right span {
+  background: #34c759;
+}
+
+
+/* =========================================================
+   LEFT
+   ========================================================= */
+
+.left {
+  transform:
+    rotateY(-90deg) translateZ(55px);
+}
+
+.left span {
+  background: #007aff;
+}
+
+
+/* =========================================================
+   TOP
+   ========================================================= */
+
+.top {
+  transform:
+    rotateX(90deg) translateZ(55px);
+}
+
+.top span {
+  background: #f5f5f5;
+}
+
+
+/* =========================================================
+   BOTTOM
+   ========================================================= */
+
+.bottom {
+  transform:
+    rotateX(-90deg) translateZ(55px);
+}
+
+.bottom span {
+  background: #ff2d55;
+}
+
+
+/* =========================================================
+   CUBE ROTATION
+   ========================================================= */
+
+@keyframes cubeRotate {
+
+  0% {
+    transform:
+      rotateX(-18deg) rotateY(0deg) rotateZ(0deg);
+  }
+
+  25% {
+    transform:
+      rotateX(12deg) rotateY(90deg) rotateZ(4deg);
+  }
+
+  50% {
+    transform:
+      rotateX(-15deg) rotateY(180deg) rotateZ(-3deg);
+  }
+
+  75% {
+    transform:
+      rotateX(15deg) rotateY(270deg) rotateZ(4deg);
+  }
+
+  100% {
+    transform:
+      rotateX(-18deg) rotateY(360deg) rotateZ(0deg);
+  }
+}
+
+
+/* =========================================================
+   CUBE ENTRANCE
+   ========================================================= */
+
+@keyframes cubeIntro {
+
+  from {
+    opacity: 0;
+
+    transform:
+      scale(.5) translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      scale(1) translateY(0);
+  }
+}
+
+
+/* =========================================================
+   CUBELY BRAND
+   ========================================================= */
+
+.cubely-brand {
+  margin-top: 40px;
+
+  text-align: center;
+
+  opacity: 0;
+
+  transform:
+    translateY(20px);
+
+  animation:
+    brandAppear .9s cubic-bezier(.16, 1, .3, 1) .65s forwards;
+}
+
+
+.cubely-brand h1 {
+  margin: 0;
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  font-size:
+    clamp(48px, 8vw, 76px);
+
+  font-weight: 900;
+
+  letter-spacing:
+    -.08em;
+
+  line-height: .9;
+}
+
+
+.cubely-brand h1 span {
+  color: #ff4d00;
+}
+
+
+.cubely-brand p {
+  margin:
+    18px 0 0;
+
+  font-family:
+    "DM Mono",
+    monospace;
+
+  font-size: 9px;
+
+  letter-spacing:
+    .3em;
+
+  color: #777;
+}
+
+
+@keyframes brandAppear {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0);
+  }
+}
+
+
+/* =========================================================
+   MAIN PAGE
+   ========================================================= */
+
+.page {
+  opacity: 0;
+  visibility: hidden;
+  transform:
+    translateY(15px);
+   font-family:
+    "DM Mono",
+    monospace;
+  transition:
+    opacity .8s ease,
+    transform .8s ease,
+    visibility .8s;
+}
+
+
+.page.visible {
+  opacity: 1;
+
+  visibility: visible;
+
+  transform:
+    translateY(0);
+}
+
+
+/* =========================================================
+   LOCK SCROLL DURING INTRO
+   ========================================================= */
+
+body.intro-active {
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+  .cube-wrapper {
+    width: 140px;
+
+    height: 140px;
+  }
+
+  .cube,
+  .cube-face {
+    width: 90px;
+
+    height: 90px;
+  }
+
+  .cube-face {
+    padding: 4px;
+
+    gap: 3px;
+  }
+
+  .front {
+    transform:
+      rotateY(0deg) translateZ(45px);
+  }
+
+  .back {
+    transform:
+      rotateY(180deg) translateZ(45px);
+  }
+
+  .right {
+    transform:
+      rotateY(90deg) translateZ(45px);
+  }
+
+  .left {
+    transform:
+      rotateY(-90deg) translateZ(45px);
+  }
+
+  .top {
+    transform:
+      rotateX(90deg) translateZ(45px);
+  }
+
+  .bottom {
+    transform:
+      rotateX(-90deg) translateZ(45px);
+  }
+
+  .cubely-brand {
+    margin-top: 30px;
+  }
+
+  .cubely-brand p {
+    font-size: 8px;
+
+    letter-spacing: .2em;
+  }
+}
